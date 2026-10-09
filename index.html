@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aryan Tambe — AI Engineer & Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07080d;
+    --bg-elevated:#0c0e17;
+    --surface: rgba(255,255,255,0.025);
+    --surface-hover: rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.16);
+    --text:#f4f5f9;
+    --text-muted:#9499ad;
+    --text-faint:#565b70;
+    --accent:#5b7cfa;
+    --accent-2:#9b7cff;
+    --accent-soft: rgba(91,124,250,0.14);
+    --live:#4ade80;
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+    --container: 1180px;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size:16px;
+    line-height:1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x:hidden;
+  }
+
+  img, svg{ display:block; }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family: inherit; cursor:pointer; }
+
+  .container{ max-width: var(--container); margin:0 auto; padding:0 32px; }
+  @media (max-width:600px){ .container{ padding:0 20px; } }
+
+  /* ---------- shared text styles ---------- */
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size:12px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color: var(--accent);
+    display:inline-flex; align-items:center; gap:10px;
+    margin-bottom:20px;
+  }
+  .eyebrow::before{ content:''; width:24px; height:1px; background: var(--accent); display:inline-block; }
+  .eyebrow.center::after{ content:''; width:24px; height:1px; background: var(--accent); display:inline-block; }
+
+  .section-heading{
+    font-family: var(--font-display);
+    font-weight:600;
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing:-0.02em;
+    margin-bottom:16px;
+  }
+  .section-sub{
+    color: var(--text-muted);
+    font-size:16px;
+    max-width:520px;
+    margin-bottom:60px;
+  }
+
+  .grad-text{
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  /* ---------- reveal animation ---------- */
+  .reveal{ opacity:0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.visible{ opacity:1; transform:translateY(0); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+    .reveal{ opacity:1; transform:none; }
+    html{ scroll-behavior:auto; }
+  }
+
+  /* ---------- nav ---------- */
+  .nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    height:76px; display:flex; align-items:center;
+    border-bottom:1px solid transparent;
+    transition: background .3s, border-color .3s;
+  }
+  .nav.scrolled{
+    background: rgba(7,8,13,0.7);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom-color: var(--border);
+  }
+  .nav .container{ display:flex; align-items:center; justify-content:space-between; width:100%; }
+  .logo{ font-family: var(--font-mono); font-weight:600; font-size:18px; letter-spacing:-0.02em; }
+  .logo span{ color: var(--accent); }
+  .nav-links{ display:flex; gap:36px; align-items:center; }
+  .nav-links a{
+    font-size:14px; color: var(--text-muted); transition: color .2s; position:relative; padding:4px 0;
+  }
+  .nav-links a::after{
+    content:''; position:absolute; left:0; bottom:0; height:1px; width:0;
+    background: var(--accent); transition: width .25s ease;
+  }
+  .nav-links a:hover{ color: var(--text); }
+  .nav-links a:hover::after{ width:100%; }
+  .nav-cta{
+    font-family: var(--font-mono); font-size:13px; padding:10px 20px;
+    border:1px solid var(--border-strong); border-radius:100px;
+    display:inline-flex; align-items:center; gap:8px; transition: all .25s;
+  }
+  .nav-cta:hover{ border-color: var(--accent); box-shadow: 0 0 24px var(--accent-soft); }
+
+  .nav-toggle{
+    display:none; background:none; border:none; padding:8px;
+    flex-direction:column; gap:5px; width:36px;
+  }
+  .nav-toggle span{ display:block; height:1.5px; width:100%; background: var(--text); transition: all .25s; }
+  .nav-toggle.open span:nth-child(1){ transform: translateY(6.5px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2){ opacity:0; }
+  .nav-toggle.open span:nth-child(3){ transform: translateY(-6.5px) rotate(-45deg); }
+
+  @media (max-width:860px){
+    .nav-links, .nav-cta{ display:none; }
+    .nav-toggle{ display:flex; }
+    .nav-links.open{
+      display:flex; flex-direction:column; align-items:flex-start; gap:24px;
+      position:fixed; top:76px; left:0; right:0; padding:32px 24px 40px;
+      background: rgba(7,8,13,0.97);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom:1px solid var(--border);
+    }
+    .nav-links.open a{ font-size:16px; }
+    .nav-cta.open{ display:inline-flex; }
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height:100vh; display:flex; flex-direction:column; justify-content:center;
+    position:relative; padding-top:76px; overflow:hidden;
+  }
+  .hero-grid{
+    position:absolute; inset:0;
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size:32px 32px;
+    -webkit-mask-image: radial-gradient(ellipse 75% 60% at 50% 35%, black, transparent 75%);
+    mask-image: radial-gradient(ellipse 75% 60% at 50% 35%, black, transparent 75%);
+  }
+  .hero-glow{
+    position:absolute; width:560px; height:560px; border-radius:50%;
+    background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+    filter: blur(40px); pointer-events:none;
+    left:50%; top:32%; transform: translate(-50%,-50%);
+    transition: left .35s ease-out, top .35s ease-out;
+  }
+  .hero-blob{ position:absolute; border-radius:50%; filter: blur(90px); opacity:.45; animation: float 24s ease-in-out infinite; }
+  .hero-blob.a{ width:420px; height:420px; background: var(--accent); top:-140px; right:-100px; }
+  .hero-blob.b{ width:360px; height:360px; background: var(--accent-2); bottom:-160px; left:-90px; animation-delay:-12s; }
+  @keyframes float{ 0%,100%{ transform: translate(0,0) scale(1); } 50%{ transform: translate(40px,-30px) scale(1.08); } }
+
+  .hero-content{ position:relative; z-index:2; padding:80px 0 120px; }
+  .hero h1{
+    font-family: var(--font-display);
+    font-weight:700;
+    font-size: clamp(40px, 7vw, 84px);
+    line-height:1.06;
+    letter-spacing:-0.03em;
+    max-width:15ch;
+  }
+  .hero p.lead{
+    color: var(--text-muted); font-size:18px; max-width:480px; margin-top:24px;
+  }
+  .hero-actions{ display:flex; gap:16px; margin-top:44px; flex-wrap:wrap; }
+
+  .btn{
+    font-family: var(--font-body); font-weight:500; font-size:15px;
+    padding:14px 28px; border-radius:100px; transition: all .25s;
+    display:inline-flex; align-items:center; gap:8px; border:1px solid transparent;
+  }
+  .btn-primary{ background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff; }
+  .btn-primary:hover{ box-shadow: 0 0 32px var(--accent-soft); transform: translateY(-2px); }
+  .btn-ghost{ border-color: var(--border-strong); color: var(--text); }
+  .btn-ghost:hover{ border-color: var(--accent); background: var(--surface); }
+
+  .status-card{
+    position:absolute; right:48px; bottom:64px; z-index:2;
+    background: var(--surface); border:1px solid var(--border); border-radius:16px;
+    padding:16px 20px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    font-family: var(--font-mono); font-size:12.5px; color: var(--text-muted);
+    max-width:240px;
+  }
+  .status-top{ display:flex; align-items:center; gap:10px; margin-bottom:6px; color: var(--text); }
+  .status-dot{
+    width:8px; height:8px; border-radius:50%; background: var(--live); flex-shrink:0;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(74,222,128,0.5); }
+    70%{ box-shadow:0 0 0 8px rgba(74,222,128,0); }
+    100%{ box-shadow:0 0 0 0 rgba(74,222,128,0); }
+  }
+  .status-sub{ color: var(--text-faint); font-size:11.5px; padding-left:18px; }
+
+  @media (max-width:860px){
+    .status-card{ display:none; }
+  }
+
+  /* ---------- about ---------- */
+  .about{ padding:140px 0; }
+  .about .container{ display:grid; grid-template-columns:1.4fr 1fr; gap:80px; align-items:start; }
+  .about-text p{ color: var(--text-muted); font-size:17px; margin-bottom:20px; max-width:58ch; }
+  .about-text p strong{ color: var(--text); font-weight:500; }
+
+  .fact-card{
+    background: var(--surface); border:1px solid var(--border); border-radius:20px;
+    padding:32px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  }
+  .fact-row{ display:flex; justify-content:space-between; gap:16px; padding:14px 0; border-bottom:1px solid var(--border); font-size:14px; }
+  .fact-row:last-child{ border-bottom:none; padding-bottom:0; }
+  .fact-row:first-child{ padding-top:0; }
+  .fact-row .k{ color: var(--text-faint); font-family: var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.12em; flex-shrink:0; padding-top:2px; }
+  .fact-row .v{ color: var(--text); text-align:right; }
+
+  @media (max-width:860px){
+    .about{ padding:90px 0; }
+    .about .container{ grid-template-columns:1fr; gap:48px; }
+  }
+
+  /* ---------- skills ---------- */
+  .skills{ padding:90px 0 140px; }
+  .skills-grid{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:1px;
+    background: var(--border); border:1px solid var(--border); border-radius:20px; overflow:hidden;
+  }
+  .skill-card{ background: var(--bg-elevated); padding:32px; transition: background .25s; }
+  .skill-card:hover{ background: var(--surface-hover); }
+  .skill-icon{
+    width:40px; height:40px; border-radius:10px; background: var(--accent-soft);
+    display:flex; align-items:center; justify-content:center; color: var(--accent); margin-bottom:22px;
+  }
+  .skill-icon svg{ width:20px; height:20px; }
+  .skill-card h3{ font-family: var(--font-display); font-size:17px; font-weight:600; margin-bottom:8px; letter-spacing:-0.01em; }
+  .skill-card p{ font-size:14px; color: var(--text-muted); }
+
+  @media (max-width:860px){ .skills-grid{ grid-template-columns: repeat(2,1fr); } .skills{ padding:60px 0 100px; } }
+  @media (max-width:600px){ .skills-grid{ grid-template-columns: 1fr; } }
+
+  /* ---------- work / projects ---------- */
+  .work{ padding:90px 0 140px; }
+  .work-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap:24px; }
+  .project-card{
+    border:1px solid var(--border); border-radius:20px; overflow:hidden;
+    background: var(--bg-elevated); transition: border-color .3s, transform .3s;
+  }
+  .project-card:hover{ border-color: var(--border-strong); transform: translateY(-4px); }
+
+  .project-thumb{
+    aspect-ratio: 16/9; position:relative; display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(135deg, rgba(91,124,250,0.14), rgba(155,124,255,0.05));
+  }
+  .project-thumb::before{
+    content:''; position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+    background-size:28px 28px;
+  }
+  .project-thumb svg{ width:52px; height:52px; color: var(--accent); position:relative; z-index:1; opacity:.85; }
+  .project-tag{
+    position:absolute; top:16px; left:16px; font-family: var(--font-mono); font-size:11px;
+    padding:5px 12px; border-radius:100px; background: rgba(7,8,13,0.55);
+    border:1px solid var(--border-strong); letter-spacing:.05em; z-index:2; color: var(--text-muted);
+  }
+  .project-tag.status-progress{ color: var(--accent); border-color: var(--accent-soft); }
+
+  .project-body{ padding:28px; }
+  .project-body h3{ font-family: var(--font-display); font-size:20px; font-weight:600; margin-bottom:10px; letter-spacing:-0.01em; }
+  .project-body .problem{ color: var(--text-muted); font-size:14.5px; margin-bottom:22px; max-width:50ch; }
+
+  .tech-pills{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
+  .tech-pill{ font-family: var(--font-mono); font-size:11.5px; padding:5px 10px; border:1px solid var(--border); border-radius:6px; color: var(--text-muted); }
+
+  .project-links{ display:flex; gap:24px; }
+  .project-link{ font-size:14px; font-weight:500; display:inline-flex; align-items:center; gap:6px; transition: color .2s; }
+  .project-link svg{ width:14px; height:14px; }
+  .project-link:hover{ color: var(--accent); }
+  .project-link.disabled{ color: var(--text-faint); pointer-events:none; }
+
+  .project-card.featured{ grid-column: 1 / -1; }
+  .project-card.featured .project-thumb{ aspect-ratio:auto; min-height:220px; }
+
+  @media (max-width:860px){
+    .work{ padding:60px 0 100px; }
+    .work-grid{ grid-template-columns:1fr; }
+    .project-card.featured{ grid-column:auto; }
+  }
+
+  /* ---------- vision ---------- */
+  .vision{ padding:160px 0; position:relative; text-align:center; overflow:hidden; }
+  .vision-glow{
+    position:absolute; top:50%; left:50%; width:700px; height:700px; transform:translate(-50%,-50%);
+    background: radial-gradient(circle, var(--accent-soft), transparent 70%); filter: blur(70px);
+  }
+  .vision .container{ position:relative; z-index:1; }
+  .vision h2{
+    font-family: var(--font-display); font-size: clamp(28px, 5vw, 52px); font-weight:600;
+    line-height:1.32; max-width:18ch; margin:0 auto 28px; letter-spacing:-0.02em;
+  }
+  .vision p{ color: var(--text-muted); font-size:17px; max-width:480px; margin:0 auto; }
+
+  @media (max-width:600px){ .vision{ padding:100px 0; } }
+
+  /* ---------- journey / changelog ---------- */
+  .journey{ padding:90px 0 140px; }
+  .changelog{ position:relative; margin-top:60px; }
+  .changelog::before{
+    content:''; position:absolute; left:11px; top:8px; bottom:8px; width:1px; background: var(--border);
+  }
+  .change-entry{ position:relative; padding-left:48px; padding-bottom:48px; }
+  .change-entry:last-child{ padding-bottom:0; }
+  .change-entry::before{
+    content:''; position:absolute; left:4px; top:6px; width:15px; height:15px; border-radius:50%;
+    background: var(--bg); border:2px solid var(--border-strong);
+  }
+  .change-entry.shipped::before{ border-color: var(--accent); background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .change-entry.current::before{
+    border-color: var(--live); background: var(--live); box-shadow: 0 0 0 4px rgba(74,222,128,0.18);
+    animation: pulse 2s infinite;
+  }
+  .change-header{ display:flex; align-items:center; gap:14px; margin-bottom:10px; flex-wrap:wrap; }
+  .change-version{
+    font-family: var(--font-mono); font-size:13px; font-weight:600; padding:3px 10px;
+    border-radius:6px; border:1px solid var(--border-strong); color: var(--accent);
+  }
+  .change-status{ font-family: var(--font-mono); font-size:11px; color: var(--text-faint); text-transform:uppercase; letter-spacing:.12em; }
+  .change-entry h3{ font-family: var(--font-display); font-size:19px; font-weight:600; margin-bottom:8px; letter-spacing:-0.01em; }
+  .change-entry p{ color: var(--text-muted); font-size:15px; max-width:60ch; }
+
+  @media (max-width:600px){ .journey{ padding:60px 0 100px; } }
+
+  /* ---------- contact ---------- */
+  .contact{ padding:90px 0 90px; }
+  .contact-card{
+    border:1px solid var(--border); border-radius:28px; padding:80px 40px; text-align:center;
+    position:relative; overflow:hidden; background: var(--bg-elevated);
+  }
+  .contact-card::before{
+    content:''; position:absolute; top:-55%; left:50%; width:600px; height:600px; transform:translateX(-50%);
+    background: radial-gradient(circle, var(--accent-soft), transparent 70%); filter: blur(70px);
+  }
+  .contact-inner{ position:relative; z-index:1; }
+  .contact h2{ font-family: var(--font-display); font-size: clamp(28px,5vw,48px); font-weight:600; margin-bottom:16px; letter-spacing:-0.02em; }
+  .contact p{ color: var(--text-muted); max-width:440px; margin:0 auto 36px; }
+  .contact-email{
+    font-family: var(--font-mono); font-size: clamp(18px,3vw,28px); color: var(--text);
+    display:inline-flex; align-items:center; gap:12px; padding-bottom:8px;
+    border-bottom:1px solid var(--border-strong); transition: border-color .25s, color .25s;
+  }
+  .contact-email:hover{ color: var(--accent); border-color: var(--accent); }
+  .contact-email svg{ width:20px; height:20px; }
+
+  .social-row{ display:flex; gap:14px; justify-content:center; margin-top:44px; flex-wrap:wrap; }
+  .social-link{
+    font-family: var(--font-mono); font-size:13px; padding:11px 22px; border-radius:100px;
+    border:1px solid var(--border); color: var(--text-muted);
+    display:inline-flex; align-items:center; gap:8px; transition: all .25s;
+  }
+  .social-link svg{ width:13px; height:13px; }
+  .social-link:hover{ border-color: var(--accent); color: var(--accent); box-shadow: 0 0 20px var(--accent-soft); }
+
+  @media (max-width:600px){
+    .contact-card{ padding:56px 24px; }
+  }
+
+  /* ---------- footer ---------- */
+  footer{ padding:32px 0; border-top:1px solid var(--border); }
+  footer .container{
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:13px; color: var(--text-faint); font-family: var(--font-mono);
+  }
+  footer a:hover{ color: var(--accent); }
+
+  @media (max-width:600px){
+    footer .container{ flex-direction:column; gap:12px; text-align:center; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav" id="nav">
+    <div class="container">
+      <a href="#" class="logo">AM<span>.</span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#work">Work</a>
+        <a href="#journey">Journey</a>
+        <a href="#contact">Contact</a>
+        <a href="#contact" class="nav-cta open">Say hi →</a>
+      </div>
+      <a href="#contact" class="nav-cta" style="display:none" id="navCtaDesktop">Say hi →</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero" id="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-blob a"></div>
+    <div class="hero-blob b"></div>
+    <div class="hero-glow" id="heroGlow"></div>
+
+    <div class="container hero-content">
+      <span class="eyebrow">Aryan Tambe — AI Engineer &amp; Builder</span>
+      <h1>I build <span class="grad-text">AI products</span> that solve real problems for real businesses.</h1>
+      <p class="lead">17-year-old engineering student turning side projects into a startup — one AI agent, automation, and shipped product at a time.</p>
+      <div class="hero-actions">
+        <a href="#work" class="btn btn-primary">View my work →</a>
+        <a href="#contact" class="btn btn-ghost">Let's talk</a>
+      </div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-top"><span class="status-dot"></span> Currently building — AI Automation Studio</div>
+      <div class="status-sub">Open to select freelance work</div>
+    </div>
+  </header>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-text reveal">
+        <span class="eyebrow">About</span>
+        <h2 class="section-heading">More builder than student.</h2>
+        <p>I'm Aryan — a 17-year-old engineering student who'd rather ship something small today than plan something big for next year. Most of what I know, I learned by building: <strong>AI agents</strong>, automations, and interfaces for problems real people have.</p>
+        <p>I've built chatbots that handle real customer conversations, automations that save businesses hours every week, and tools I genuinely wished existed. I'm not interested in looking busy — I'm interested in <strong>building things that work</strong>, getting feedback, and getting better at the craft every week.</p>
+        <p>Long term, the goal isn't a portfolio. It's a company built around products people actually pay for.</p>
+      </div>
+      <div class="fact-card reveal">
+        <div class="fact-row"><span class="k">Location</span><span class="v">Maharashtra, India</span></div>
+        <div class="fact-row"><span class="k">Focus</span><span class="v">AI agents &amp; automation</span></div>
+        <div class="fact-row"><span class="k">Currently learning</span><span class="v">LLM agents &amp; product design</span></div>
+        <div class="fact-row"><span class="k">Stack</span><span class="v">Next.js · React · Tailwind · n8n</span></div>
+        <div class="fact-row"><span class="k">Status</span><span class="v">Open to freelance work</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SKILLS ============ -->
+  <section class="skills" id="skills">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">What I work with</span>
+        <h2 class="section-heading">Tools I use to go from idea to shipped product.</h2>
+        <p class="section-sub">A mix of AI, frontend engineering, automation, and the product thinking to tie it all together.</p>
+      </div>
+
+      <div class="skills-grid reveal">
+        <div class="skill-card">
+          <div class="skill-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><circle cx="12" cy="13" r="2"/>
+              <line x1="12" y1="7" x2="12" y2="11"/><line x1="10.5" y1="14.2" x2="6.5" y2="17.5"/><line x1="13.5" y1="14.2" x2="17.5" y2="17.5"/>
+            </svg>
+          </div>
+          <h3>AI &amp; ML</h3>
+          <p>Building with LLMs, agents, and intelligent automations.</p>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="12" rx="10" ry="4.2"/>
+              <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(60 12 12)"/>
+              <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(120 12 12)"/>
+              <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>
+            </svg>
+          </div>
+          <h3>React</h3>
+          <p>Building dynamic, component-driven interfaces.</p>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 3 21 8 12 13 3 8 12 3"/>
+              <polyline points="3 12 12 17 21 12"/>
+              <polyline points="3 16 12 21 21 16"/>
+            </svg>
+          </div>
+          <h3>Next.js</h3>
+          <p>Full-stack apps that ship fast and scale cleanly.</p>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/>
+              <path d="M3 15c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/>
+            </svg>
+          </div>
+          <h3>Tailwind CSS</h3>
+          <p>Designing directly in code, fast and consistently.</p>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2 3 14h7l-1 8 10-12h-7z"/>
+            </svg>
+          </div>
+          <h3>Automation</h3>
+          <p>Removing repetitive work with reliable systems.</p>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="4" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/>
+              <line x1="12" y1="6" x2="5.8" y2="17.3"/><line x1="12" y1="6" x2="18.2" y2="17.3"/><line x1="7" y1="19" x2="17" y2="19"/>
+            </svg>
+          </div>
+          <h3>n8n</h3>
+          <p>Connecting tools and APIs into real workflows.</p>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.4 8.4 0 0 1-1.2 4.4L21 20l-4.3-1.1a8.4 8.4 0 1 1 4.3-7.4z"/>
+              <line x1="8" y1="10" x2="14" y2="10"/><line x1="8" y1="13" x2="12" y2="13"/>
+            </svg>
+          </div>
+          <h3>Prompt Engineering</h3>
+          <p>Getting reliable, structured output from AI models.</p>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M9 8 13.5 12.5 9 17" transform="translate(0 -0.5)"/>
+              <circle cx="14" cy="9" r="0.8" fill="currentColor" stroke="none"/>
+            </svg>
+          </div>
+          <h3>UI / UX</h3>
+          <p>Designing interfaces that feel obvious to use.</p>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 17 9 11 13 15 21 7"/>
+              <polyline points="15 7 21 7 21 13"/>
+            </svg>
+          </div>
+          <h3>Startup Thinking</h3>
+          <p>Validating ideas before spending months building them.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WORK / PROJECTS ============ -->
+  <section class="work" id="work">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">Selected work</span>
+        <h2 class="section-heading">Built for real people, not just a portfolio.</h2>
+        <p class="section-sub">A few projects — from client work to tools built for myself — that show how I think about problems.</p>
+      </div>
+
+      <div class="work-grid">
+        <article class="project-card reveal">
+          <div class="project-thumb">
+            <span class="project-tag">Client project</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/>
+              <circle cx="9" cy="11" r="0.8" fill="currentColor" stroke="none"/><circle cx="12" cy="11" r="0.8" fill="currentColor" stroke="none"/><circle cx="15" cy="11" r="0.8" fill="currentColor" stroke="none"/>
+            </svg>
+          </div>
+          <div class="project-body">
+            <h3>AI WhatsApp Chatbot</h3>
+            <p class="problem">A local business was losing leads by answering the same WhatsApp questions all day. I built an AI assistant that handles FAQs, qualifies leads, and hands off to a human only when needed.</p>
+            <div class="tech-pills">
+              <span class="tech-pill">WhatsApp API</span>
+              <span class="tech-pill">OpenAI</span>
+              <span class="tech-pill">n8n</span>
+              <span class="tech-pill">Node.js</span>
+            </div>
+            <div class="project-links">
+              <a href="#" class="project-link">Live demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+              <a href="#" class="project-link">Code <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-thumb">
+            <span class="project-tag">Client project</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="17" rx="2"/>
+              <line x1="3" y1="9" x2="21" y2="9"/>
+              <line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/>
+              <path d="M8 14l2 2 4-4"/>
+            </svg>
+          </div>
+          <div class="project-body">
+            <h3>Dental Appointment Bot</h3>
+            <p class="problem">A dental clinic's front desk spent hours every day booking, confirming, and rescheduling appointments by phone. I built an AI booking assistant that handles all of it over chat — synced to their calendar.</p>
+            <div class="tech-pills">
+              <span class="tech-pill">AI Agent</span>
+              <span class="tech-pill">n8n</span>
+              <span class="tech-pill">Calendar API</span>
+              <span class="tech-pill">WhatsApp</span>
+            </div>
+            <div class="project-links">
+              <a href="https://dental-zen-platform.vercel.app" target="_blank" rel="noopener" class="project-link">Live demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+              <a href="https://github.com/arbeyeu/dental-zen-platform" target="_blank" rel="noopener" class="project-link">Code <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-thumb">
+            <span class="project-tag">Personal project</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.6z"/>
+            </svg>
+          </div>
+          <div class="project-body">
+            <h3>Love Spark — Dating App</h3>
+            <p class="problem">A modern dating app concept built around a calmer, low-pressure way to meet people — clean profile discovery, mutual matching, and real-time chat between matches.</p>
+            <div class="tech-pills">
+              <span class="tech-pill">Next.js</span>
+              <span class="tech-pill">Tailwind</span>
+              <span class="tech-pill">Supabase</span>
+              <span class="tech-pill">Real-time Chat</span>
+            </div>
+            <div class="project-links">
+              <a href="https://love-spark-wheat.vercel.app/" target="_blank" rel="noopener" class="project-link">Live demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+              <a href="#" class="project-link">Code <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-thumb">
+            <span class="project-tag">Internal tooling</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/>
+              <path d="M9 6h6"/><path d="M7.5 8.5 10.5 15.5"/><path d="M16.5 8.5 13.5 15.5"/>
+            </svg>
+          </div>
+          <div class="project-body">
+            <h3>Automation Toolkit</h3>
+            <p class="problem">A set of reusable n8n workflows that automate the boring parts of running a small business — content posting, lead follow-ups, and weekly reporting.</p>
+            <div class="tech-pills">
+              <span class="tech-pill">n8n</span>
+              <span class="tech-pill">Webhooks</span>
+              <span class="tech-pill">OpenAI</span>
+              <span class="tech-pill">Google Sheets</span>
+            </div>
+            <div class="project-links">
+              <a href="#" class="project-link">Live demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+              <a href="#" class="project-link">Code <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-thumb">
+            <span class="project-tag">Personal brand</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"/>
+              <line x1="3" y1="9" x2="21" y2="9"/>
+              <circle cx="6.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+              <circle cx="8.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+            </svg>
+          </div>
+          <div class="project-body">
+            <h3>Personal Portfolio Website</h3>
+            <p class="problem">My own personal portfolio and personal-brand site — designed and built from scratch to showcase my projects, share my journey, and make it easy for people to reach out and collaborate.</p>
+            <div class="tech-pills">
+              <span class="tech-pill">Next.js</span>
+              <span class="tech-pill">Tailwind CSS</span>
+              <span class="tech-pill">Personal Brand</span>
+            </div>
+            <div class="project-links">
+              <a href="https://love-spark-wheat.vercel.app/" target="_blank" rel="noopener" class="project-link">Live demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+              <a href="#" class="project-link">Code <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card featured reveal">
+          <div class="project-thumb">
+            <span class="project-tag status-progress">In progress</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2c2.2 2.1 4 6.3 4 10.2A4 4 0 0 1 12 16a4 4 0 0 1-4-3.8C8 8.3 9.8 4.1 12 2z"/>
+              <circle cx="12" cy="9" r="1.4" fill="currentColor" stroke="none"/>
+              <path d="M9.5 15 7 21l2.5-1.5"/><path d="M14.5 15 17 21l-2.5-1.5"/>
+            </svg>
+          </div>
+          <div class="project-body">
+            <h3>AI Co-pilot for Solo Founders <span style="color:var(--text-faint); font-weight:400; font-size:14px;">— early-stage concept</span></h3>
+            <p class="problem">My current side project: an AI assistant that helps solo founders run the operational side of their business — replies, scheduling, reporting, and follow-ups — from a single chat interface. Currently scoping the first usable version.</p>
+            <div class="tech-pills">
+              <span class="tech-pill">Next.js</span>
+              <span class="tech-pill">AI Agents</span>
+              <span class="tech-pill">n8n</span>
+              <span class="tech-pill">Product design</span>
+            </div>
+            <div class="project-links">
+              <span class="project-link disabled">Live demo — coming soon</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VISION ============ -->
+  <section class="vision">
+    <div class="vision-glow"></div>
+    <div class="container">
+      <span class="eyebrow center">Why I build</span>
+      <h2>I don't just want to build apps. I want to build <span class="grad-text">products that thousands of people rely on</span> — and a company around them.</h2>
+      <p>Apps are easy to start. Products people actually need, use, and pay for are not. That gap is what I'm working to close, one project at a time.</p>
+    </div>
+  </section>
+
+  <!-- ============ JOURNEY / CHANGELOG ============ -->
+  <section class="journey" id="journey">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">My journey, versioned</span>
+        <h2 class="section-heading">Changelog</h2>
+        <p class="section-sub">I treat my own growth like a product — shipped in versions, not waiting for a "finished" self.</p>
+      </div>
+
+      <div class="changelog reveal">
+        <div class="change-entry shipped">
+          <div class="change-header">
+            <span class="change-version">v0.1</span>
+            <span class="change-status">Shipped</span>
+          </div>
+          <h3>First lines of code</h3>
+          <p>Started learning programming out of pure curiosity — basic web development, small scripts, and a habit of asking "how does this actually work?"</p>
+        </div>
+
+        <div class="change-entry shipped">
+          <div class="change-header">
+            <span class="change-version">v0.4</span>
+            <span class="change-status">Shipped</span>
+          </div>
+          <h3>Discovered AI</h3>
+          <p>Went deep on LLMs and prompt engineering, and started building small AI tools and agents just to see what was possible.</p>
+        </div>
+
+        <div class="change-entry shipped">
+          <div class="change-header">
+            <span class="change-version">v0.7</span>
+            <span class="change-status">Shipped</span>
+          </div>
+          <h3>First client, first real product</h3>
+          <p>Built my first AI chatbot for an actual business — and learned that a real user with a real problem changes everything about how you build.</p>
+        </div>
+
+        <div class="change-entry shipped">
+          <div class="change-header">
+            <span class="change-version">v0.9</span>
+            <span class="change-status">Shipped</span>
+          </div>
+          <h3>Building in public</h3>
+          <p>Started sharing projects, automations, and lessons openly — and freelancing became a steady part of how I work and learn.</p>
+        </div>
+
+        <div class="change-entry current">
+          <div class="change-header">
+            <span class="change-version">v1.0</span>
+            <span class="change-status">In progress</span>
+          </div>
+          <h3>Founder mode</h3>
+          <p>Currently building toward a startup — refining product thinking, validating ideas, and looking for the right problem to solve at scale.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact-card reveal">
+        <div class="contact-inner">
+          <span class="eyebrow center">Let's build something</span>
+          <h2>Got an idea, a problem, or a project?</h2>
+          <p>Open to freelance projects, collaborations, and conversations about AI, automation, and startups.</p>
+          <a href="mailto:hello@aryantambe.dev" class="contact-email">
+            hello@aryantambe.dev
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+          </a>
+          <div class="social-row">
+            <a href="#" class="social-link">LinkedIn <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+            <a href="#" class="social-link">GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+            <a href="#" class="social-link">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <span>© 2026 Aryan Tambe</span>
+      <a href="#hero">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script>
+    // nav scroll state
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    // mobile nav toggle
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('open');
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navToggle.classList.remove('open');
+        navLinks.classList.remove('open');
+      });
+    });
+
+    // scroll reveal
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => observer.observe(el));
+
+    // hero mouse-follow glow
+    const hero = document.getElementById('hero');
+    const glow = document.getElementById('heroGlow');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReducedMotion) {
+      hero.addEventListener('mousemove', (e) => {
+        const rect = hero.getBoundingClientRect();
+        glow.style.left = (e.clientX - rect.left) + 'px';
+        glow.style.top = (e.clientY - rect.top) + 'px';
+      });
+    }
+  </script>
+</body>
+</html>
